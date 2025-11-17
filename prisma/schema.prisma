@@ -90,9 +90,9 @@ model Employee {
   prlDate             DateTime?         @default(now()) @db.Timestamp(6)
   dateofRegularity    DateTime?         @default(now()) @db.Timestamp(6)
   presentAddressId    String            @unique @db.Uuid
-  presentAddress      Address           @relation("employeePresentAddress", fields: [presentAddressId], references: [id])
+  presentAddress      Address           @relation("employeePresentAddress", fields: [presentAddressId], references: [id], onDelete: Cascade)
   permanentAddressId  String            @unique @db.Uuid
-  permanentAddress    Address           @relation(name: "employeePermanentAddress", fields: [permanentAddressId], references: [id])
-  spouseInformation   SpouseInformation @relation(fields: [spouseInformationId], references: [id])
+  permanentAddress    Address           @relation(name: "employeePermanentAddress", fields: [permanentAddressId], references: [id], onDelete: Cascade)
+  spouseInformation   SpouseInformation @relation(fields: [spouseInformationId], references: [id], onDelete: Cascade)
   spouseInformationId String            @db.Uuid
 }
