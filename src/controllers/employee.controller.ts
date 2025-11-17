@@ -49,7 +49,35 @@ export const createEmployee = async (req: Request, res: Response) => {
       data: createdEmployee,
     });
   } catch (error) {
-    console.log(error);
+    return res.status(400).json({
+      success: false,
+      message: "Error in fetching all employees",
+      data: {},
+    });
+  }
+};
+
+export const getEmployeeById = async (
+  req: Request<{ id: string }>,
+  res: Response
+) => {
+  const { id } = req.params;
+  try {
+    const employeeById = await prismaClient.employee.findFirst({
+      where: { id: id },
+      include: {
+        presentAddress: true,
+        permanentAddress: true,
+        spouseInformation: true,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Created Employee.",
+      data: employeeById,
+    });
+  } catch (error) {
     return res.status(400).json({
       success: false,
       message: "Error in fetching all employees",
