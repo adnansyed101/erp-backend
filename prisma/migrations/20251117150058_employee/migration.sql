@@ -23,14 +23,14 @@ CREATE TABLE "EmployeePersonalInformation" (
     "currentDesignation" TEXT NOT NULL,
     "dateOfBirth" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "dateOfConfirmation" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "fatherName" TEXT,
-    "motherName" TEXT,
-    "nationalId" TEXT,
-    "placeOfBirth" TEXT,
-    "maritalStatus" "MaritalStatus",
-    "eTIN" TEXT,
-    "program" TEXT,
-    "unit" TEXT,
+    "fatherName" TEXT DEFAULT 'n/a',
+    "motherName" TEXT DEFAULT 'n/a',
+    "nationalId" TEXT DEFAULT 'n/a',
+    "placeOfBirth" TEXT DEFAULT 'n/a',
+    "maritalStatus" "MaritalStatus" DEFAULT 'Single',
+    "eTIN" TEXT DEFAULT 'n/a',
+    "program" TEXT DEFAULT 'n/a',
+    "unit" TEXT DEFAULT 'n/a',
     "prlDate" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
     "dateofRegularity" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
     "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -85,7 +85,7 @@ CREATE TABLE "BankInformation" (
 -- CreateTable
 CREATE TABLE "Employee" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
-    "employeePersonalInformationId" UUID,
+    "personalInformationId" UUID,
     "presentAddressId" UUID NOT NULL,
     "permanentAddressId" UUID NOT NULL,
 
@@ -102,7 +102,7 @@ CREATE UNIQUE INDEX "EmployeePersonalInformation_personalEmail_key" ON "Employee
 CREATE UNIQUE INDEX "SpouseInformation_email_key" ON "SpouseInformation"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Employee_employeePersonalInformationId_key" ON "Employee"("employeePersonalInformationId");
+CREATE UNIQUE INDEX "Employee_personalInformationId_key" ON "Employee"("personalInformationId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Employee_presentAddressId_key" ON "Employee"("presentAddressId");
@@ -111,7 +111,7 @@ CREATE UNIQUE INDEX "Employee_presentAddressId_key" ON "Employee"("presentAddres
 CREATE UNIQUE INDEX "Employee_permanentAddressId_key" ON "Employee"("permanentAddressId");
 
 -- AddForeignKey
-ALTER TABLE "Employee" ADD CONSTRAINT "Employee_employeePersonalInformationId_fkey" FOREIGN KEY ("employeePersonalInformationId") REFERENCES "EmployeePersonalInformation"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Employee" ADD CONSTRAINT "Employee_personalInformationId_fkey" FOREIGN KEY ("personalInformationId") REFERENCES "EmployeePersonalInformation"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_presentAddressId_fkey" FOREIGN KEY ("presentAddressId") REFERENCES "Address"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
