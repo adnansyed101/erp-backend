@@ -3,11 +3,14 @@ import express from "express";
 import type { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import employeeRouter from "./routes/employee.route.ts";
+import cors from "cors";
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 4000;
+
+app.use(cors());
 
 app.use(express.json());
 
