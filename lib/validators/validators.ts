@@ -5,8 +5,8 @@ import z from "zod";
 const EmployeePersonalInformationSchema = z.object({
   fullName: z.string().min(2, "At least 2 characters are needed."),
   imageUrl: z.string().min(2, "At least 2 characters are needed."),
-  officeEmail: z.email().min(2, "Office Email is required"),
-  personalEmail: z.email().min(2, "PersonalEmail is required."),
+  officeEmail: z.email(),
+  personalEmail: z.email(),
   personalNumber: z.string().min(2, "Personal Phone Number is required."),
   officeNumber: z.string().min(2, "Office Phone Number is required."),
   employeeType: z.string().min(2, "Employee Type is required"),
@@ -17,9 +17,9 @@ const EmployeePersonalInformationSchema = z.object({
   religion: z.string().min(1, "Religion status is required."),
   joiningDesignation: z.string().min(1, "Joining Designation is required."),
   currentDesignation: z.string().min(1, "Current Designation is required"),
-  dateOfBirth: z.date().min(1, "Date of birth is required."),
-  dateOfConfirmation: z.date().min(1, "Date of Confirmation is required."),
-  fatherName: z.string().optional(),
+  dateOfBirth: z.date(),
+  dateOfConfirmation: z.date(),
+  fatherName: z.string().nullable().optional(),
   motherName: z.string().optional(),
   nationalId: z.string().optional(),
   placeOfBirth: z.string().optional(),
@@ -33,28 +33,26 @@ const EmployeePersonalInformationSchema = z.object({
   dateofRegularity: z.string().optional(),
 });
 
-const PresentAddressSchema = z.object({
+const AddressSchema = z.object({
   division: z.string().min(1, "Division is required."),
   district: z.string().min(1, "District is required."),
   upazilaOrThana: z.string().min(1, "Upazila is required"),
   postOffice: z.string().min(1, "Post Office is required."),
   postCode: z.string().min(1, "Post Code is required."),
-  block: z.string().min(1, "Block is required.").optional(),
   houseNoOrVillage: z.string().min(1, "House No./Village is required."),
+  block: z.string().min(1, "Block is required."),
   roadNo: z.string().optional(),
 });
-
-const PermanentAddressSchema = PresentAddressSchema;
 
 const SpouseInformationSchema = z
   .object({
     fullName: z.string(),
-    dateOfBirth: z.string(),
+    dateOfBirth: z.date(),
     gender: z.string(),
     occupation: z.string(),
     nid: z.string(),
     mobileNumber: z.string(),
-    email: z.string(),
+    email: z.email(),
   })
   .optional();
 
@@ -68,8 +66,8 @@ const BankInformationSchema = z.object({
 
 export const EmployeeSchema = z.object({
   personalInformation: EmployeePersonalInformationSchema,
-  presentAddress: PresentAddressSchema,
-  permanentAddress: PermanentAddressSchema,
+  permanentAddress: AddressSchema,
+  presentAddress: AddressSchema,
   spouseInformation: SpouseInformationSchema,
   bankInformation: BankInformationSchema,
 });
