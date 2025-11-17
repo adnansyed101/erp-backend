@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Gender {
+  MALE
+  Female
+  Other
+}
+
+enum MaritalStatus {
+  Single
+  Married
+  Divorced
+  Widowed
+  Separated
+}
+
+model EmployeePersonalInformation {
+  id                 String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fullName           String
+  imageUrl           String
+  officeEmail        String         @unique
+  personalEmail      String         @unique
+  personalNumber     String
+  officeNumber       String
+  employeeType       String
+  employeeStatus     String
+  nationality        String
+  disability         Boolean
+  gender             Gender
+  religion           String
+  joiningDesignation String
+  currentDesignation String
+  dateOfBirth        DateTime       @default(now()) @db.Timestamp(6)
+  dateOfConfirmation DateTime       @default(now()) @db.Timestamp(6)
+  fatherName         String?
+  motherName         String?
+  nationalId         String?
+  placeOfBirth       String?
+  maritalStatus      MaritalStatus?
+  eTIN               String?
+  program            String?
+  unit               String?
+  prlDate            DateTime?      @default(now()) @db.Timestamp(6)
+  dateofRegularity   DateTime?      @default(now()) @db.Timestamp(6)
+  createdAt          DateTime       @default(now()) @db.Timestamp(6)
+  employee           Employee?
+}
+
+model Address {
+  id                        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  division                  String
+  district                  String
+  upazilaOrThana            String
+  postOffice                String
+  postCode                  String
+  block                     String
+  houseNoOrVillage          String
+  roadNo                    String
+  createdAt                 DateTime  @default(now()) @db.Timestamp(6)
+  employeePresentAddress    Employee? @relation("employeePresentAddress")
+  employeePermanenttAddress Employee? @relation("employeePermanentAddress")
+}
+
+model SpouseInformation {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fullName     String
+  dateOfBirth  DateTime @default(now()) @db.Timestamp(6)
+  gender       String
+  occupation   String
+  nid          String
+  mobileNumber String
+  email        String   @unique
+  createdAt    DateTime @default(now()) @db.Timestamp(6)
+}
+
+model BankInformation {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bankName      String
+  branchName    String
+  accountNumber String
+  walletType    String
+  walletNumber  String
+  createdAt     DateTime @default(now()) @db.Timestamp(6)
+}
+
+model Employee {
+  id                    String                       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  personalInformationId String?                      @unique @db.Uuid
+  personalInformation   EmployeePersonalInformation? @relation(fields: [personalInformationId], references: [id])
+  presentAddressId      String                       @unique @db.Uuid
+  presentAddress        Address                      @relation("employeePresentAddress", fields: [presentAddressId], references: [id])
+  permanentAddressId    String                       @unique @db.Uuid
+  permanentAddress      Address                      @relation(name: "employeePermanentAddress", fields: [permanentAddressId], references: [id])
+}
