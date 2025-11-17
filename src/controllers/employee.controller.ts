@@ -1,6 +1,5 @@
 import type { Request, Response } from "express";
 import prismaClient from "../db/prisma.ts";
-import type { Employee } from "../lib/types/types.ts";
 
 export const getAllEmployees = async (req: Request, res: Response) => {
   try {
@@ -22,7 +21,7 @@ export const getAllEmployees = async (req: Request, res: Response) => {
 
 export const createEmployee = async (req: Request, res: Response) => {
   try {
-    const createdEmployee: Employee = await prismaClient.employee.create({
+    const createdEmployee = await prismaClient.employee.create({
       data: {
         ...req.body,
         presentAddress: {
