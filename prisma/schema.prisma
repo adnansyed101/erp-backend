@@ -15,7 +15,7 @@ datasource db {
 }
 
 enum Gender {
-  MALE
+  Male
   Female
   Other
 }
@@ -29,7 +29,7 @@ enum MaritalStatus {
 }
 
 model Address {
-  id                        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                        String    @id @default(uuid())
   division                  String
   district                  String
   upazilaOrThana            String
@@ -37,31 +37,32 @@ model Address {
   postCode                  String
   block                     String
   houseNoOrVillage          String
-  roadNo                    String
-  createdAt                 DateTime  @default(now()) @db.Timestamp(6)
+  roadNo                    String?   @default("n/a")
+  createdAt                 DateTime  @default(now())
   employeePresentAddress    Employee? @relation("employeePresentAddress")
   employeePermanenttAddress Employee? @relation("employeePermanentAddress")
 }
 
-model SpouseInformation {
-  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  fullName     String
-  dateOfBirth  DateTime   @default(now()) @db.Timestamp(6)
-  gender       String
-  occupation   String
-  nid          String
-  mobileNumber String
-  email        String     @unique
-  createdAt    DateTime   @default(now()) @db.Timestamp(6)
-  employees    Employee[]
+model ContactInformation {
+  id                        String    @id @default(uuid())
+  fullName                  String    @default("n/a")
+  dateOfBirth               DateTime  @default(now())
+  gender                    String    @default("n/a")
+  occupation                String    @default("n/a")
+  nid                       String    @default("n/a")
+  mobileNumber              String    @default("n/a")
+  email                     String    @default("n/a")
+  createdAt                 DateTime  @default(now())
+  employeeSpouseInformation Employee? @relation("spouseInformation")
+  employeeEmergencyContact  Employee? @relation("emergencyContact")
 }
 
 model Employee {
-  id                  String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                  String              @id @default(uuid())
   fullName            String
   imageUrl            String
-  officeEmail         String            @unique
-  personalEmail       String            @unique
+  officeEmail         String              @unique
+  personalEmail       String              @unique
   personalNumber      String
   officeNumber        String
   employeeType        String
@@ -72,27 +73,29 @@ model Employee {
   religion            String
   joiningDesignation  String
   currentDesignation  String
-  dateOfBirth         DateTime          @default(now()) @db.Timestamp(6)
-  dateOfConfirmation  DateTime          @default(now()) @db.Timestamp(6)
-  fatherName          String?           @default("n/a")
-  motherName          String?           @default("n/a")
-  nationalId          String?           @default("n/a")
-  placeOfBirth        String?           @default("n/a")
-  maritalStatus       MaritalStatus?    @default(Single)
-  eTIN                String?           @default("n/a")
-  program             String?           @default("n/a")
-  unit                String?           @default("n/a")
+  dateOfBirth         DateTime            @default(now())
+  dateOfConfirmation  DateTime            @default(now())
+  fatherName          String?             @default("n/a")
+  motherName          String?             @default("n/a")
+  nationalId          String?             @default("n/a")
+  placeOfBirth        String?             @default("n/a")
+  maritalStatus       MaritalStatus?      @default(Single)
+  eTIN                String?             @default("n/a")
+  program             String?             @default("n/a")
+  unit                String?             @default("n/a")
   bankName            String
   branchName          String
   accountNumber       String
   walletType          String
   walletNumber        String
-  prlDate             DateTime?         @default(now()) @db.Timestamp(6)
-  dateofRegularity    DateTime?         @default(now()) @db.Timestamp(6)
-  presentAddressId    String            @unique @db.Uuid
-  presentAddress      Address           @relation("employeePresentAddress", fields: [presentAddressId], references: [id], onDelete: Cascade)
-  permanentAddressId  String            @unique @db.Uuid
-  permanentAddress    Address           @relation(name: "employeePermanentAddress", fields: [permanentAddressId], references: [id], onDelete: Cascade)
-  spouseInformation   SpouseInformation @relation(fields: [spouseInformationId], references: [id], onDelete: Cascade)
-  spouseInformationId String            @db.Uuid
+  prlDate             DateTime?           @default(now())
+  dateofRegularity    DateTime?           @default(now())
+  presentAddressId    String              @unique
+  presentAddress      Address             @relation(name: "employeePresentAddress", fields: [presentAddressId], references: [id], onDelete: Cascade)
+  permanentAddressId  String              @unique
+  permanentAddress    Address             @relation(name: "employeePermanentAddress", fields: [permanentAddressId], references: [id], onDelete: Cascade)
+  spouseInformation   ContactInformation? @relation(name: "spouseInformation", fields: [spouseInformationId], references: [id], onDelete: Cascade)
+  spouseInformationId String?             @unique
+  emergencyContact    ContactInformation  @relation(name: "emergencyContact", fields: [emergencyContactId], references: [id], onDelete: Cascade)
+  emergencyContactId  String              @unique
 }
