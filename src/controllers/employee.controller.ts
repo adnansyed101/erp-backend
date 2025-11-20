@@ -24,6 +24,7 @@ export const createEmployee = async (
   req: Request<{}, {}, Employee>,
   res: Response
 ) => {
+  console.log(req.body);
   try {
     const createdEmployee = await prismaClient.employee.create({
       data: {
@@ -46,6 +47,11 @@ export const createEmployee = async (
         emergencyContact: {
           create: {
             ...req.body.emergencyContact,
+          },
+        },
+        additionalInformation: {
+          create: {
+            ...req.body.additionalInformation,
           },
         },
       },
@@ -78,6 +84,7 @@ export const getEmployeeById = async (
         permanentAddress: true,
         spouseInformation: true,
         emergencyContact: true,
+        additionalInformation: true,
       },
     });
 
