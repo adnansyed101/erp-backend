@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import prismaClient from "../db/prisma.ts";
+import type { Employee } from "../lib/types/types.ts";
 
 export const getAllEmployees = async (req: Request, res: Response) => {
   try {
@@ -19,7 +20,10 @@ export const getAllEmployees = async (req: Request, res: Response) => {
   }
 };
 
-export const createEmployee = async (req: Request, res: Response) => {
+export const createEmployee = async (
+  req: Request<{}, {}, Employee>,
+  res: Response
+) => {
   try {
     const createdEmployee = await prismaClient.employee.create({
       data: {
@@ -39,6 +43,11 @@ export const createEmployee = async (req: Request, res: Response) => {
             ...req.body.spouseInformation,
           },
         },
+        emergencyContact: {
+          create: {
+            ...req.body.emergencyContact,
+          },
+        },
       },
     });
 
@@ -50,7 +59,7 @@ export const createEmployee = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message: "Error in fetching all employees",
+      message: "Error in creating employee.",
       data: {},
     });
   }
@@ -68,6 +77,7 @@ export const getEmployeeById = async (
         presentAddress: true,
         permanentAddress: true,
         spouseInformation: true,
+        emergencyContact: true,
       },
     });
 
