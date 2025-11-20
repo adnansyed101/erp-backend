@@ -57,45 +57,55 @@ model ContactInformation {
   employeeEmergencyContact  Employee? @relation("emergencyContact")
 }
 
+model AdditionalInformation {
+  id               String         @id @default(uuid())
+  fatherName       String?        @default("n/a")
+  motherName       String?        @default("n/a")
+  nationalId       String?        @default("n/a")
+  placeOfBirth     String?        @default("n/a")
+  maritalStatus    MaritalStatus? @default(Single)
+  eTIN             String?        @default("n/a")
+  program          String?        @default("n/a")
+  unit             String?        @default("n/a")
+  prlDate          DateTime?      @default(now())
+  dateofRegularity DateTime?      @default(now())
+  createdAt        DateTime       @default(now())
+  employee         Employee?
+}
+
 model Employee {
-  id                  String              @id @default(uuid())
-  fullName            String
-  imageUrl            String
-  officeEmail         String              @unique
-  personalEmail       String              @unique
-  personalNumber      String
-  officeNumber        String
-  employeeType        String
-  employeeStatus      String
-  nationality         String
-  disability          Boolean
-  gender              Gender
-  religion            String
-  joiningDesignation  String
-  currentDesignation  String
-  dateOfBirth         DateTime            @default(now())
-  dateOfConfirmation  DateTime            @default(now())
-  fatherName          String?             @default("n/a")
-  motherName          String?             @default("n/a")
-  nationalId          String?             @default("n/a")
-  placeOfBirth        String?             @default("n/a")
-  maritalStatus       MaritalStatus?      @default(Single)
-  eTIN                String?             @default("n/a")
-  program             String?             @default("n/a")
-  unit                String?             @default("n/a")
-  bankName            String
-  branchName          String
-  accountNumber       String
-  walletType          String
-  walletNumber        String
-  prlDate             DateTime?           @default(now())
-  dateofRegularity    DateTime?           @default(now())
-  presentAddressId    String              @unique
-  presentAddress      Address             @relation(name: "employeePresentAddress", fields: [presentAddressId], references: [id], onDelete: Cascade)
-  permanentAddressId  String              @unique
-  permanentAddress    Address             @relation(name: "employeePermanentAddress", fields: [permanentAddressId], references: [id], onDelete: Cascade)
-  spouseInformation   ContactInformation? @relation(name: "spouseInformation", fields: [spouseInformationId], references: [id], onDelete: Cascade)
-  spouseInformationId String?             @unique
-  emergencyContact    ContactInformation  @relation(name: "emergencyContact", fields: [emergencyContactId], references: [id], onDelete: Cascade)
-  emergencyContactId  String              @unique
+  id                     String                @id @default(uuid())
+  fullName               String
+  imageUrl               String
+  officeEmail            String                @unique
+  personalEmail          String                @unique
+  personalNumber         String
+  officeNumber           String
+  employeeType           String
+  employeeStatus         String
+  nationality            String
+  disability             Boolean
+  gender                 Gender
+  religion               String
+  joiningDesignation     String
+  currentDesignation     String
+  dateOfBirth            DateTime              @default(now())
+  dateOfConfirmation     DateTime              @default(now())
+  bankName               String
+  branchName             String
+  accountNumber          String
+  walletType             String
+  walletNumber           String
+  createdAt              DateTime              @default(now())
+  // Relations
+  addtionalInformationId String                @unique
+  additionalInformation  AdditionalInformation @relation(fields: [addtionalInformationId], references: [id], onDelete: Cascade)
+  presentAddressId       String                @unique
+  presentAddress         Address               @relation(name: "employeePresentAddress", fields: [presentAddressId], references: [id], onDelete: Cascade)
+  permanentAddressId     String                @unique
+  permanentAddress       Address               @relation(name: "employeePermanentAddress", fields: [permanentAddressId], references: [id], onDelete: Cascade)
+  spouseInformation      ContactInformation?   @relation(name: "spouseInformation", fields: [spouseInformationId], references: [id], onDelete: Cascade)
+  spouseInformationId    String?               @unique
+  emergencyContact       ContactInformation    @relation(name: "emergencyContact", fields: [emergencyContactId], references: [id], onDelete: Cascade)
+  emergencyContactId     String                @unique
 }
